@@ -1,13 +1,12 @@
 const path = require("path");
-const CleanPlugin = require("clean-webpack-plugin"); // 웹팩플러그인 불러오기
+const CleanPlugin = require("clean-webpack-plugin");
 
 module.exports = {
-  mode: "production", //배포용
+  mode: "production",
   entry: "./src/app.ts",
   output: {
     filename: "bundle.js",
     path: path.resolve(__dirname, "dist"),
-    //dev서버 경로 삭제
   },
   devtool: "none",
   target: "node",
