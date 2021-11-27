@@ -1,18 +1,32 @@
-import { Sequelize } from "sequelize";
+import { Users } from "./users";
+import { Sequelize, Dialect } from "sequelize";
 import { config } from "../config/config";
 
-const env = "development";
-const { database, username, password, host, dialect } = config[env];
+const env = undefined || "development";
+const { database, username, password, host, dialect } = config[env] as {
+  database: string;
+  username: string;
+  password: string;
+  host: string;
+  dialect: Dialect;
+};
 export const sequelize = new Sequelize(database!, username!, password, {
   host,
-  dialect: "mysql", //그냥 dialect로 하면 에러남 왜인지 모르겠음
+  dialect,
+  dialectOptions: {
+    charset: "utf8mb4",
+    dateStrings: true, // ! 데이터 로드시 문자열로 가저옴
+    typeCast: true, // ! 타임존을 역으로 계산하지 않음
+  },
+  timezone: "+09:00",
+  define: {
+    timestamps: true,
+    deletedAt: true,
+    paranoid: true,
+  },
 });
 
-sequelize
-  .authenticate()
-  .then(() => {
-    console.log("Connection has been established successfully.");
-  })
-  .catch((err: Error) => {
-    console.log("Unable to connect to the database:", err);
-  });
+export function models() {
+  Users.initModel(sequelize);
+  return sequelize;
+}

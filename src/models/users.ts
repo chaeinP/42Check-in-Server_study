@@ -1,5 +1,5 @@
-import { Sequelize, DataTypes, Model, Optional } from "sequelize";
 import { sequelize } from "./index";
+import { Sequelize, DataTypes, Model, Optional } from "sequelize";
 
 interface usersAttributes {
   id: number;
@@ -8,9 +8,9 @@ interface usersAttributes {
   userStatus: string;
 }
 
-type usersOptionalAttributes = "id" | "username" | "image" | "userStatus";
+type usersOptionalAttributes = "id";
 
-export type usersCreationAttributes = Optional<
+type usersCreationAttributes = Optional<
   usersAttributes,
   usersOptionalAttributes
 >;
@@ -25,7 +25,7 @@ export class Users
   public userStatus!: string;
 
   static initModel(sequelize: Sequelize): typeof Users {
-    Users.init(
+    return Users.init(
       {
         id: {
           allowNull: false,
@@ -47,13 +47,9 @@ export class Users
         },
       },
       {
-        modelName: "Users",
+        tableName: "Users",
         sequelize,
-        timestamps: true,
-        deletedAt: true,
-        paranoid: true,
       }
     );
-    return Users;
   }
 }

@@ -1,6 +1,4 @@
 import { RequestHandler } from "express";
-import { DataTypes, DATE } from "sequelize/dist";
-import { createDeflate } from "zlib";
 import { Users } from "../models/users";
 
 export const createUser: RequestHandler = async (req, res) => {
@@ -13,6 +11,7 @@ export const createUser: RequestHandler = async (req, res) => {
     const [user, created] = await Users.findOrCreate({
       where: { username },
       defaults: {
+        username,
         image,
         userStatus,
       },
