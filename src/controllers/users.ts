@@ -1,5 +1,6 @@
 import { RequestHandler } from "express";
 import { Users } from "../models/users";
+import { logger } from "../modules/logger";
 
 export const createUser: RequestHandler = async (req, res) => {
   try {

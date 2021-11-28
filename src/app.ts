@@ -1,15 +1,10 @@
+import { logger } from "./modules/logger";
 import express, { Request, Response, NextFunction } from "express";
 import { models } from "./models";
 import checkinRoutes from "./routes/checkin";
+import rTracer from "cls-rtracer";
 
 export const app = express();
-
-app.use(express.json());
-app.use("/", checkinRoutes);
-
-app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
-  res.status(500).send({ message: err.message });
-});
 
 models()
   .sync({ force: true })
@@ -18,4 +13,21 @@ models()
   })
   .catch((err) => console.log(err));
 
+app.use(express.json());
+app.use(rTracer.expressMiddleware());
+app.use((req: Request, res: Response, next: NextFunction) => {
+  const {
+    method,
+    path,
+    url,
+    query,
+    headers: { cookie },
+    body,
+  } = req;
+  const request = { method, path, cookie, body, url, query };
+  logger.info({ request });
+  next();
+});
+
+app.use("/", checkinRoutes);
 app.listen(3000);
