@@ -1,26 +1,24 @@
 import * as dotenv from "dotenv";
-dotenv.config();
+import path from "path";
 
-export const config = {
-  development: {
-    username: process.env.DEV_DB_USERNAME,
-    password: process.env.DEV_DB_PASSWORD,
-    database: process.env.DEV_DB_NAME,
-    host: "127.0.0.1",
-    dialect: "mysql",
+if (process.env.NODE_ENV === "development") {
+  dotenv.config({ path: path.join(__dirname, "../../env.development") });
+}
+
+const env = {
+  port: parseInt(process.env.PORT!, 10) || 3000,
+  db: {
+    host: process.env.DB_HOST,
+    port: parseInt(process.env.DB_PORT!, 10),
+    username: process.env.DB_USERNAME,
+    password: process.env.DB_PASSWORD,
+    name: process.env.DB_NAME
   },
-  // test: {
-  //   username: "root",
-  //   password: process.env.DATABASE_PASSWORD,
-  //   database: "42checkin_practice",
-  //   host: "127.0.0.1",
-  //   dialect: "mysql",
-  // },
-  // production: {
-  //   username: "root",
-  //   password: process.env.DATABASE_PASSWORD,
-  //   database: "42checkin_practice",
-  //   host: "127.0.0.1",
-  //   dialect: "mysql",
-  // },
+  client: {
+    id: process.env.CLIENT_ID,
+    secret: process.env.CLIENT_SECRET,
+    callback: process.env.CLIENT_CALLBACK
+  }
 };
+
+export default env;
